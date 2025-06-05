@@ -209,7 +209,18 @@ export default {
           document.body.removeChild(link)
         })
       } else if (data.redirect) {
-        window.location = data.redirect
+          const url = typeof data.redirect === 'string' ? data.redirect : data.redirect.url
+          if (url.substring(0,7) === 'http://' || url.substring(0,8) === 'https://') {
+            Nova.visit({
+              url,
+              remote: true,
+            }, {
+              openInNewTab: typeof data.redirect === 'object' ? data.redirect.openInNewTab : false,
+            })
+          }
+          else {
+            Nova.visit(data.redirect.url)
+          }
       } else if (data.visit) {
         Nova.visit({
           url: Nova.url(data.visit.path, data.visit.options),
